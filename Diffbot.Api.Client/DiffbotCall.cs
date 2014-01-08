@@ -11,7 +11,8 @@ namespace Diffbot.Api.Client
 {
     internal class DiffbotCall
     {
-        
+        internal readonly string[] APINames = new string[] { "article", "frontpage" };
+
         HttpClient httpClient;
 
         public DiffbotCall(string baseApiUrl) // http://api.diffbot.com
@@ -47,24 +48,25 @@ namespace Diffbot.Api.Client
                 throw new ArgumentException("Invalid value for parameter 'api'.");
             }
 
-            // TODO: Validate this is a valid check
-            if (version < 2)
-            {
-                throw new ArgumentException("Invalid api version");
-            }
             #endregion
 
-            StringBuilder apiUrl = CreateUrl(url, token, api, fields, version, optionalParameters);
+            StringBuilder apiUrl = CreateUrl(url, token, api, fields, version, optionalParameters, version != 0);
+            apiUrl.Insert(0, "api/");
+            apiUrl.Append("&format=json");
             
             var result = await httpClient.GetStringAsync(apiUrl.ToString());
 
             return JObject.Parse(result);
         }
 
-        private static StringBuilder CreateUrl(string url, string token, string api, string[] fields, int version, Dictionary<string, string> optionalParameters)
+        private static StringBuilder CreateUrl(string url, string token, string api, string[] fields, int version, Dictionary<string, string> optionalParameters, bool addVersion)
         {
             StringBuilder apiUrl = new StringBuilder();
-            apiUrl.AppendFormat("v{0}/{1}?token={2}", version, api, token);
+            if (addVersion)
+            {
+                apiUrl.AppendFormat("v{0}/", version);
+            }
+            apiUrl.AppendFormat("{0}?token={1}", api, token);
             if (fields != null && fields.Length > 0)
             {
                 apiUrl.AppendFormat("&fields={0}", string.Join(",", fields));
@@ -82,8 +84,7 @@ namespace Diffbot.Api.Client
 
         private bool IsValidApi(string api)
         {
-            // TODO: rest of the apis
-            return api == "article";
+            return APINames.Contains(api);
         }
 
         public async Task<JObject> ApiPostAsync(string url, string token, string api, string[] fields, int version, Dictionary<string, string> optionalParameters, string html, string contentType)
@@ -125,7 +126,7 @@ namespace Diffbot.Api.Client
             }
             #endregion
 
-            StringBuilder apiUrl = CreateUrl(url, token, api, fields, version, optionalParameters);
+            StringBuilder apiUrl = CreateUrl(url, token, api, fields, version, optionalParameters, false);
 
             var formatter = new System.Net.Http.Formatting.JsonMediaTypeFormatter();
             var result = await httpClient.PostAsync<string>(apiUrl.ToString(), html, formatter);

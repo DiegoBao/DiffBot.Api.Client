@@ -16,9 +16,37 @@ namespace Diffbot.Api.Demo
             //ArticleUrl();
             //ArticleHtmlString();
             //ArticleHtmlStream();
+            FrontPageUrl();
 
             Console.WriteLine("Press any key to finish.");
             Console.ReadKey();
+        }
+
+        private async static void FrontPageUrl()
+        {
+            ApiClient apiClient = new ApiClient("http://www.diffbot.com", "408da6bbb2f6f23fd44f73ee78de2fa8", "0");
+
+            try
+            {
+                // http://goo.gl/JjqwN
+                // http://www.diffbot.com/dev/docs/article/
+                // http://www.diffbot.com/products/automatic/
+                Dictionary<string, string> optionalParameters = new Dictionary<string, string>();
+                optionalParameters.Add("all", "true");
+                var result = await apiClient.GetFrontPageAsync("http://www.diffbot.com/products/automatic/", optionalParameters);
+
+                if (result != null)
+                {
+                    FrontPage fp = result;
+                    //Console.WriteLine("Title: {0}", fp.Title);
+                    //Console.WriteLine("Date: {0}", fp.Date);
+                    //Console.WriteLine("Images: {0}", (fp.Images != null) ? fp.Images.Count() : 0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private async static void ArticleHtmlStream()
