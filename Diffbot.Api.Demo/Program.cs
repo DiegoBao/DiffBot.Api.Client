@@ -15,7 +15,7 @@ namespace Diffbot.Api.Demo
         {
             //ArticleUrl();
             //ArticleHtmlString();
-            ArticleHtmlStream();
+            //ArticleHtmlStream();
 
             Console.WriteLine("Press any key to finish.");
             Console.ReadKey();
