@@ -17,7 +17,7 @@ namespace Diffbot.Api.Client.Model
         public string Author { get; set; }
         public string Text { get; set; }
         public string Title { get; set; }
-        public List<Image> Images { get; set; }
+        public List<ArticleImage> Images { get; set; }
         public string Html { get; set; }
         public DateTime Date { get; set; }
         public string Type { get; set; }
@@ -29,7 +29,7 @@ namespace Diffbot.Api.Client.Model
         public List<string> Tags { get; set; }
         //public Dictionary<string, double> Stats { get; set; }
         public string HumanLanguage { get; set; }
-        public List<Video> Videos { get; set; }
+        public List<ArticleVideo> Videos { get; set; }
         public List<SuperTag> SuperTags { get; set; }
         public Dictionary<string, JToken> Properties { get; set; }
 

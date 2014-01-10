@@ -72,10 +72,12 @@
     <Compile Include="Model\FrontPage.cs" />
     <Compile Include="Model\FrontPageItem.cs" />
     <Compile Include="Model\FrontPageItemType.cs" />
+    <Compile Include="Model\ArticleImage.cs" />
     <Compile Include="Model\Image.cs" />
+    <Compile Include="Model\Images.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\SuperTag.cs" />
-    <Compile Include="Model\Video.cs" />
+    <Compile Include="Model\ArticleVideo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
