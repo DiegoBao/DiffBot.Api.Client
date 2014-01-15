@@ -392,5 +392,61 @@ namespace Diffbot.Api.Client
             return classifierResult;
         }
         #endregion
+
+        #region Custom API
+        /// <summary>
+        /// Calls the Article API. 
+        /// </summary>
+        /// <param name="url">Article URL to process.</param>
+        /// <param name="fields">Array with the fields that will be returned by the API.</param>
+        /// <returns>Returns information about the primary article content on the submitted page.</returns>
+        public async Task<JObject> CallCustomAPIAsync(string url, string customApiName, Dictionary<string, string> optionalParameters)
+        {
+            try
+            {
+                return await diffbotCall.ApiGetAsync(url, this.token, customApiName, null, this.version, optionalParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex; //TODO: better exception handler
+            }
+        }
+        
+        /// <summary>
+        /// Calls the Article API submitting the html to analyse directly.
+        /// </summary>
+        /// <param name="url">Article URL to process.</param>
+        /// <param name="fields">Array with the fields that will be returned by the API.</param>
+        /// <param name="html">Html to be analysed instead of calling the URL. The url parameter is still required.</param>
+        /// <returns>Returns information about the primary article content on the submitted page.</returns>
+        public async Task<JObject> CallCustomAPIAsync(string url, string customApiName, Dictionary<string, string> optionalParameters, string html)
+        {
+            try
+            {
+                return await diffbotCall.ApiPostAsync(url, this.token, customApiName, null, this.version, optionalParameters, html, "text/html");
+            }
+            catch (Exception ex)
+            {
+                throw ex; //TODO: better exception handler
+            }
+        }
+
+        /// <summary>
+        /// Calls the Article API  submitting the html to analyse directly. 
+        /// </summary>
+        /// <param name="url">Article URL to process.</param>
+        /// <param name="fields">Array with the fields that will be returned by the API.</param>
+        /// <param name="htmlStream">Stream with the html to be analysed instead of calling the URL. The url parameter is still required.</param>
+        /// <returns>Returns information about the primary article content on the submitted page.</returns>
+        public async Task<JObject> CallCustomAPIAsync(string url, string customApiName, Dictionary<string, string> optionalParameters, Stream htmlStream)
+        {
+            byte[] buffer = new byte[htmlStream.Length];
+            await htmlStream.ReadAsync(buffer, 0, buffer.Length);
+
+            string html = System.Text.UTF8Encoding.UTF8.GetString(buffer);
+
+            return await CallCustomAPIAsync(url, customApiName, optionalParameters, html);
+        }
+        #endregion
     }
 }

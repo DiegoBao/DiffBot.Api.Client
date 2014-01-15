@@ -21,10 +21,33 @@ namespace Diffbot.Api.Demo
 
             //ProductUrl();
 
-            ClassifierResultUrl();
+            //ClassifierResultUrl();
+            TestUrl();
 
             Console.WriteLine("Press any key to finish.");
             Console.ReadKey();
+        }
+
+        private async static void TestUrl()
+        {
+            ApiClient apiClient = new ApiClient("http://www.diffbot.com", "408da6bbb2f6f23fd44f73ee78de2fa8", "0");
+
+            try
+            {
+                // http://goo.gl/JjqwN
+                // http://www.diffbot.com/dev/docs/article/
+                // http://www.diffbot.com/products/automatic/
+                var result = await apiClient.CallCustomAPIAsync("http://www.xconomy.com/san-francisco/2012/07/25/diffbot-is-using-computer-vision-to-reinvent-the-semantic-web/", "test", null);
+
+                if (result != null)
+                {
+                    Console.WriteLine("Title: {0}", result["Title"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private async static void ClassifierResultUrl()

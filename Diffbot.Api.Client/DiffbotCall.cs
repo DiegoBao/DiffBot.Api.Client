@@ -11,8 +11,6 @@ namespace Diffbot.Api.Client
 {
     internal class DiffbotCall
     {
-        internal readonly string[] APINames = new string[] { "article", "frontpage", "image", "product", "analyze" };
-
         HttpClient httpClient;
 
         public DiffbotCall(string baseApiUrl) // http://api.diffbot.com
@@ -42,10 +40,6 @@ namespace Diffbot.Api.Client
             if (string.IsNullOrWhiteSpace(api))
             {
                 throw new ArgumentNullException("api");
-            }
-            else if (!IsValidApi(api))
-            {
-                throw new ArgumentException("Invalid value for parameter 'api'.");
             }
 
             #endregion
@@ -85,11 +79,6 @@ namespace Diffbot.Api.Client
             return apiUrl;
         }
 
-        private bool IsValidApi(string api)
-        {
-            return APINames.Contains(api);
-        }
-
         public async Task<JObject> ApiPostAsync(string url, string token, string api, string[] fields, int version, Dictionary<string, string> optionalParameters, string html, string contentType)
         {
             #region Argument Validation
@@ -106,10 +95,6 @@ namespace Diffbot.Api.Client
             if (string.IsNullOrWhiteSpace(api))
             {
                 throw new ArgumentNullException("api");
-            }
-            else if (!IsValidApi(api))
-            {
-                throw new ArgumentException("Invalid value for parameter 'api'.");
             }
 
             if (string.IsNullOrWhiteSpace(html))
