@@ -77,22 +77,28 @@ namespace Diffbot.Api.Client
             {
                 JObject result = await diffbotCall.ApiGetAsync(url, this.token, "article", fields, this.version, optionalParameters);
 
-                Article article = Newtonsoft.Json.JsonConvert.DeserializeObject<Article>(result.ToString());
-                article.Properties = new Dictionary<string, JToken>();
-                foreach (var property in ((dynamic)result))
-                {
-                    if (!Article.PropertyNames.Any(p => p == property.Name.ToString()))
-                    {
-                        article.Properties.Add(property.Name, property.Value);
-                    }
-                }
-
-                return article;
+                return  CreateArticle(result);
             }
             catch (Exception ex)
             {
                 throw ex; //TODO: better exception handler
             }
+        }
+
+        private static Article CreateArticle(JObject result)
+        {
+            Article article = Newtonsoft.Json.JsonConvert.DeserializeObject<Article>(result.ToString());
+
+            IDictionary<string, JToken> properties = result;
+            // Set all properties in the additional field
+            // Then remove those properties that have coded properties in the class Article
+            // leaving the rest as additional properties.
+            article.Properties = properties.ToDictionary(k => k.Key, k => (object)k.Value);
+            foreach (var propName in article.Properties.Where(k => Article.PropertyNames.Contains(k.Key)).ToArray())
+            {
+                article.Properties.Remove(propName.Key);
+            }
+            return article;
         }
 
         /// <summary>
@@ -108,17 +114,7 @@ namespace Diffbot.Api.Client
             {
                 JObject result = await diffbotCall.ApiPostAsync(url, this.token, "article", fields, this.version, optionalParameters, html, "text/html");
 
-                Article article = Newtonsoft.Json.JsonConvert.DeserializeObject<Article>(result.ToString());
-                article.Properties = new Dictionary<string, JToken>();
-                foreach (var property in ((dynamic)result))
-                {
-                    if (!Article.PropertyNames.Any(p => p == property.Name.ToString()))
-                    {
-                        article.Properties.Add(property.Name, property.Value);
-                    }
-                }
-
-                return article;
+                return CreateArticle(result);
             }
             catch (Exception ex)
             {
@@ -263,6 +259,138 @@ namespace Diffbot.Api.Client
         }
 
 
+        #endregion
+
+        #region Image
+        /// <summary>
+        /// Calls the Article API. 
+        /// </summary>
+        /// <param name="url">Article URL to process.</param>
+        /// <param name="fields">Array with the fields that will be returned by the API.</param>
+        /// <returns>Returns information about the primary article content on the submitted page.</returns>
+        public async Task<Images> GetImagesAsync(string url, string[] fields, Dictionary<string, string> optionalParameters)
+        {
+            try
+            {
+                JObject result = await diffbotCall.ApiGetAsync(url, this.token, "image", fields, this.version, optionalParameters);
+
+                return CreateImages(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex; //TODO: better exception handler
+            }
+        }
+
+        private static Images CreateImages(JObject result)
+        {
+            Images images = Newtonsoft.Json.JsonConvert.DeserializeObject<Images>(result.ToString());
+
+            IDictionary<string, JToken> properties = result;
+            // Set all properties in the additional field
+            // Then remove those properties that have coded properties in the class Article
+            // leaving the rest as additional properties.
+            images.Properties = properties.ToDictionary(k => k.Key, k => (object)k.Value);
+            foreach (var propName in images.Properties.Where(k => Images.PropertyNames.Contains(k.Key)).ToArray())
+            {
+                images.Properties.Remove(propName.Key);
+            }
+            return images;
+        }
+        #endregion
+
+        #region Product
+        /// <summary>
+        /// Calls the Article API. 
+        /// </summary>
+        /// <param name="url">Article URL to process.</param>
+        /// <param name="fields">Array with the fields that will be returned by the API.</param>
+        /// <returns>Returns information about the primary article content on the submitted page.</returns>
+        public async Task<Products> GetProductsAsync(string url, string[] fields, Dictionary<string, string> optionalParameters)
+        {
+            try
+            {
+                JObject result = await diffbotCall.ApiGetAsync(url, this.token, "product", fields, this.version, optionalParameters);
+
+                return CreateProduct(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex; //TODO: better exception handler
+            }
+        }
+
+        private static Products CreateProduct(JObject result)
+        {
+            Products products = Newtonsoft.Json.JsonConvert.DeserializeObject<Products>(result.ToString());
+
+            IDictionary<string, JToken> properties = result;
+            // Set all properties in the additional field
+            // Then remove those properties that have coded properties in the class Article
+            // leaving the rest as additional properties.
+            products.Properties = properties.ToDictionary(k => k.Key, k => (object)k.Value);
+            foreach (var propName in products.Properties.Where(k => Products.PropertyNames.Contains(k.Key)).ToArray())
+            {
+                products.Properties.Remove(propName.Key);
+            }
+            return products;
+        }
+        #endregion
+
+        #region Page Classifier
+
+        /// <summary>
+        /// Calls the Article API. 
+        /// </summary>
+        /// <param name="url">Article URL to process.</param>
+        /// <param name="fields">Array with the fields that will be returned by the API.</param>
+        /// <returns>Returns information about the primary article content on the submitted page.</returns>
+        public async Task<ClassifierResult> GetPageClassification(string url, string[] fields, PageType? mode = null, bool stats = false)
+        {
+            try
+            {
+                Dictionary<string, string> optionalParameters = new Dictionary<string, string>();
+                if (mode != null)
+                {
+                    optionalParameters.Add("mode", mode.Value.ToString().ToLowerInvariant());
+                }
+
+                if (stats)
+                {
+                    optionalParameters.Add("mode", "true");
+                }
+
+                JObject result = await diffbotCall.ApiGetAsync(url, this.token, "analyze", fields, this.version, optionalParameters);
+
+                return CreateClassifierResult(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex; //TODO: better exception handler
+            }
+        }
+
+        private static ClassifierResult CreateClassifierResult(JObject result)
+        {
+            ClassifierResult classifierResult = Newtonsoft.Json.JsonConvert.DeserializeObject<ClassifierResult>(result.ToString());
+            switch (classifierResult.Type)
+            {
+                case PageType.Article:
+                    classifierResult.PageResult = CreateArticle(result);
+                    break;
+                case PageType.FrontPage:
+                    classifierResult.PageResult = CreateFrontPage(result);
+                    break;
+                case PageType.Image:
+                    classifierResult.PageResult = CreateImages(result);
+                    break;
+                case PageType.Product:
+                    classifierResult.PageResult = CreateProduct(result);
+                    break;
+            }
+            
+            return classifierResult;
+        }
         #endregion
     }
 }

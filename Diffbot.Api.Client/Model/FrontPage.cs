@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Diffbot.Api.Client.Model
 {
-    public class FrontPage
+    public class FrontPage : IPageResult
     {
         public string Title { get; set; }
         public string SourceURL { get; set; }

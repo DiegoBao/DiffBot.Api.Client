@@ -16,10 +16,118 @@ namespace Diffbot.Api.Demo
             //ArticleUrl();
             //ArticleHtmlString();
             //ArticleHtmlStream();
-            FrontPageUrl();
+            //FrontPageUrl();
+            //ImageUrl();
+
+            //ProductUrl();
+
+            ClassifierResultUrl();
 
             Console.WriteLine("Press any key to finish.");
             Console.ReadKey();
+        }
+
+        private async static void ClassifierResultUrl()
+        {
+            ApiClient apiClient = new ApiClient();
+
+            try
+            {
+                // http://goo.gl/JjqwN
+                // http://www.diffbot.com/dev/docs/article/
+                // http://www.diffbot.com/products/automatic/
+                var result = await apiClient.GetPageClassification("http://www.pixmania.com/es/es/9044923/art/canon/eos-1100d-ef-s-18-55mm-dc.html", new string[] { "*" }, null, true);
+
+                if (result != null)
+                {
+                    Console.WriteLine("Types: {0}", result.Stats.Types.Count());
+                    if (result.Type == PageType.Product)
+                    {
+                        Products a = result.GetPageData<Products>();
+                        Console.WriteLine("Title: {0}", a.Type);
+                        Console.WriteLine("Date: {0}", a.DateCreated);
+                        Console.WriteLine("Products: {0}", (a.Items != null) ? a.Items.Count() : 0);
+                        if (a.Items.Count > 0)
+                        {
+                            Product p = a.Items.First();
+                            Console.WriteLine(p.ProductId);
+                            Console.WriteLine(p.Title);
+                            Console.WriteLine(p.Description);
+                            Console.WriteLine(p.RegularPriceDetails.Amount.ToString() + p.RegularPriceDetails.Symbol);
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        private async static void ImageUrl()
+        {
+            ApiClient apiClient = new ApiClient();
+
+            try
+            {
+                // http://goo.gl/JjqwN
+                // http://www.diffbot.com/dev/docs/article/
+                // http://www.diffbot.com/products/automatic/
+                var result = await apiClient.GetImagesAsync("http://blog.xamarin.com", new string[] { "*" }, null);
+
+                if (result != null)
+                {
+                    Images a = result;
+                    Console.WriteLine("Title: {0}", a.Title);
+                    Console.WriteLine("Date: {0}", a.Date_Created);
+                    Console.WriteLine("Images: {0}", (a.Items != null) ? a.Items.Count() : 0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        private async static void ProductUrl()
+        {
+            ApiClient apiClient = new ApiClient();
+
+            try
+            {
+                // http://goo.gl/JjqwN
+                // http://www.diffbot.com/dev/docs/article/
+                // http://www.diffbot.com/products/automatic/
+                var result = await apiClient.GetProductsAsync("http://www.amazon.es/gp/product/0007532326/ref=s9_hps_bw_g14_i1?pf_rd_m=A1AT7YVPFBWXBL&pf_rd_s=merchandised-search-4&pf_rd_r=0BGE9195WKGR7AJ6T19Y&pf_rd_t=101&pf_rd_p=454426767&pf_rd_i=665418031", new string[] { "*" }, null);
+
+                if (result != null)
+                {
+                    Products a = result;
+                    Console.WriteLine("Title: {0}", a.Type);
+                    Console.WriteLine("Date: {0}", a.DateCreated);
+                    Console.WriteLine("Products: {0}", (a.Items != null) ? a.Items.Count() : 0);
+                    if (a.Items.Count > 0)
+                    {
+                        Product p = a.Items.First();
+                        Console.WriteLine(p.ProductId);
+                        Console.WriteLine(p.Title);
+                        Console.WriteLine(p.Description);
+                        Console.WriteLine(p.RegularPriceDetails.Amount.ToString() + p.RegularPriceDetails.Symbol);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private async static void FrontPageUrl()

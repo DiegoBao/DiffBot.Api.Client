@@ -11,7 +11,7 @@ namespace Diffbot.Api.Client
 {
     internal class DiffbotCall
     {
-        internal readonly string[] APINames = new string[] { "article", "frontpage" };
+        internal readonly string[] APINames = new string[] { "article", "frontpage", "image", "product", "analyze" };
 
         HttpClient httpClient;
 
@@ -51,8 +51,11 @@ namespace Diffbot.Api.Client
             #endregion
 
             StringBuilder apiUrl = CreateUrl(url, token, api, fields, version, optionalParameters, version != 0);
-            apiUrl.Insert(0, "api/");
-            apiUrl.Append("&format=json");
+            if (version == 0)
+            {
+                apiUrl.Insert(0, "api/");
+                apiUrl.Append("&format=json");
+            }
             
             var result = await httpClient.GetStringAsync(apiUrl.ToString());
 

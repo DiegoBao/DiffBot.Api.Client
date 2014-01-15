@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Diffbot.Api.Client.Model
 {
-    public class Article
+    public class Article : IPageResult
     {
         internal static readonly string[] PropertyNames = new string[] 
                 { "icon", "author", "text", "title", "images", "html", "date", "type", 
@@ -31,7 +31,7 @@ namespace Diffbot.Api.Client.Model
         public string HumanLanguage { get; set; }
         public List<ArticleVideo> Videos { get; set; }
         public List<SuperTag> SuperTags { get; set; }
-        public Dictionary<string, JToken> Properties { get; set; }
+        public Dictionary<string, object> Properties { get; set; }
 
     }
 }
