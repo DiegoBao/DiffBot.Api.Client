@@ -13,7 +13,7 @@ namespace Diffbot.Api.Demo
 {
     class Program
     {
-                static void Main(string[] args)
+        static void Main(string[] args)
         {
             //ArticleUrl();
             //ArticleHtmlString();
@@ -25,8 +25,52 @@ namespace Diffbot.Api.Demo
 
             //ClassifierResultUrl();
             //TestUrl();
+
+            //BulkTest();
+            BulkGetDataTest();
+
             Console.WriteLine("Press any key to finish.");
             Console.ReadKey();
+        }
+
+        private async static void BulkGetDataTest()
+        {
+            BulkApiClient apiClient = new BulkApiClient("http://api.diffbot.com", "2");
+
+            var job = apiClient.CreateJob(
+                "408da6bbb2f6f23fd44f73ee78de2fa8",
+                "testJob",
+                new string[] { "http://blog.diffbot.com", "http://www.nytimes.com/2012/05/22/us/george-lucas-retreats-from-battle-with-neighbors.html", "http://techcrunch.com/2012/05/16/google-just-got-a-whole-lot-smarter-launches-its-knowledge-graph" },
+                "http://api.diffbot.com/v2/article");
+
+            await apiClient.UpdateStatus(job);
+
+            var result = await apiClient.GetData(job);
+
+        }
+
+        private async static void BulkTest()
+        {
+            BulkApiClient apiClient = new BulkApiClient("http://api.diffbot.com", "2");
+            var job = apiClient.CreateJob(
+                "408da6bbb2f6f23fd44f73ee78de2fa8", 
+                "testJob",
+                new string[] { "http://blog.diffbot.com", "http://www.nytimes.com/2012/05/22/us/george-lucas-retreats-from-battle-with-neighbors.html", "http://techcrunch.com/2012/05/16/google-just-got-a-whole-lot-smarter-launches-its-knowledge-graph" }, 
+                "http://api.diffbot.com/v2/article");
+            await apiClient.Start(job);
+
+            if (job.HasError)
+            {
+                Console.WriteLine("Error: {0}", job.Error);
+            }
+            else
+            {
+                Console.WriteLine("Name: {0}", job.Name);
+                await apiClient.Pause(job);
+                await apiClient.UpdateStatus(job);
+                await apiClient.Resume(job);
+                await apiClient.Delete(job);
+            }
         }
 
         private async static void TestUrl()

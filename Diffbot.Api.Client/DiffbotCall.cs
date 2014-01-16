@@ -50,7 +50,7 @@ namespace Diffbot.Api.Client
                 apiUrl.Insert(0, "api/");
                 apiUrl.Append("&format=json");
             }
-            
+
             var result = await httpClient.GetStringAsync(apiUrl.ToString());
 
             return JObject.Parse(result);
@@ -118,7 +118,7 @@ namespace Diffbot.Api.Client
 
             var formatter = new System.Net.Http.Formatting.JsonMediaTypeFormatter();
             var result = await httpClient.PostAsync<string>(apiUrl.ToString(), html, formatter);
-                        
+
             if (result.IsSuccessStatusCode)
             {
                 return JObject.Parse(await result.Content.ReadAsStringAsync());
@@ -126,12 +126,55 @@ namespace Diffbot.Api.Client
             else
             {
                 throw new HttpRequestException(result.ReasonPhrase);
-            }            
+            }
         }
 
-        public async Task<JObject> PostJsonAsync(string api, int version, object data)
+        public async Task<JObject> PostAsync(string api, int version, object data)
         {
-            return null;
+            StringBuilder apiUrl = new StringBuilder();
+            apiUrl.AppendFormat("v{0}/", version);
+            apiUrl.Append(api);
+
+            JObject requestObject = JObject.FromObject(data);
+            StringBuilder request = new StringBuilder();
+            foreach (var k in requestObject)
+            {
+                request.AppendFormat("{0}={1}&", k.Key, k.Value.ToString());
+            }            
+
+            var result = await httpClient.PostAsync(apiUrl.ToString(), new StringContent(request.ToString().TrimEnd('&')));
+            if (result.IsSuccessStatusCode)
+            {
+                string response = await result.Content.ReadAsStringAsync();
+                return JObject.Parse(response);
+            }
+            else
+            {
+                return JObject.FromObject(new { Error = result.ReasonPhrase, StatusCode = result.StatusCode});
+            }
+        }
+
+        public async Task<JObject> GetAsync(string api, int version, Dictionary<string, string> parameters)
+        {
+            StringBuilder apiUrl = new StringBuilder();
+            apiUrl.AppendFormat("v{0}/", version);
+            apiUrl.Append(api);
+            if (parameters != null)
+            {
+                apiUrl.Append("?");
+                apiUrl.Append(string.Join("&", parameters.Select(p => string.Format("{0}={1}", p.Key, p.Value)).ToArray()));
+            }
+
+            var result = await httpClient.GetAsync(apiUrl.ToString());
+            if (result.IsSuccessStatusCode)
+            {
+                string response = await result.Content.ReadAsStringAsync();
+                return JObject.Parse(response);
+            }
+            else
+            {
+                return JObject.FromObject(new { Error = result.ReasonPhrase, StatusCode = result.StatusCode });
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Diffbot.Api.Client.Model;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -60,19 +62,83 @@ namespace Diffbot.Api.Client
 
         public async Task Start(BulkJob job)
         {
-            
+            try
+            {
+                var response = await diffbotCall.PostAsync("bulk", this.version, job.Settings);
+                if (response["Error"] != null)
+                {
+                    job.Error = response["StatusCode"].ToString() + ": " + response["Error"].ToString();
+                }
+                else
+                {
+                    job.Error = null;
+                    Jobs jobs = JsonConvert.DeserializeObject<Jobs>(response.ToString());
+                    job.JobStatus = jobs.AllJobs.FirstOrDefault(j => j.Name == job.Name);
+                }
+            }
+            catch (Exception ex)
+            {
+                job.Error = ex.InnerException != null ? " " + ex.InnerException.Message : ex.Message;
+            }
         }
 
         public async Task Pause(BulkJob job)
         {
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("pause", "1");
+            await BulkOperations(job, parameters);
 
+        }
+
+        public async Task Resume(BulkJob job)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("pause", "0");
+            await BulkOperations(job, parameters);
         }
 
         public async Task Delete(BulkJob job)
         {
-
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("delete", "1");
+            await BulkOperations(job, parameters);
         }
 
+        public async Task UpdateStatus(BulkJob job)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            await BulkOperations(job, parameters);
+        }
 
+       private async Task BulkOperations(BulkJob job, Dictionary<string, string> parameters)
+        {
+            try
+            {
+                parameters.Add("token", job.Settings.Token);
+                parameters.Add("name", job.Name);
+                var response = await diffbotCall.GetAsync("bulk", this.version, parameters);
+                if (response["Error"] != null)
+                {
+                    job.Error = response["StatusCode"].ToString() + ": " + response["Error"].ToString();
+                }
+                else
+                {
+                    job.Error = null;
+                    Jobs jobs = JsonConvert.DeserializeObject<Jobs>(response.ToString());
+                    if (jobs.AllJobs != null)
+                    {
+                        job.JobStatus = jobs.AllJobs.FirstOrDefault(j => j.Name == job.Name);
+                    }
+                    else
+                    {
+                        job.JobStatus = null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                job.Error = ex.InnerException != null ? " " + ex.InnerException.Message : ex.Message;
+            }
+        }
     }
 }
