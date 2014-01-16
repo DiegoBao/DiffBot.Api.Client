@@ -67,6 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiClient.cs" />
+    <Compile Include="BulkApiClient.cs" />
+    <Compile Include="BulkJob.cs" />
+    <Compile Include="BulkJobSettings.cs" />
+    <Compile Include="Converters\UrlsSpaceSeparatedConverter.cs" />
     <Compile Include="Model\Article.cs" />
     <Compile Include="DiffbotCall.cs" />
     <Compile Include="Model\ClassifierResult.cs" />

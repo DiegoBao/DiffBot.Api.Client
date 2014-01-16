@@ -1,5 +1,7 @@
 ﻿using Diffbot.Api.Client;
 using Diffbot.Api.Client.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +13,7 @@ namespace Diffbot.Api.Demo
 {
     class Program
     {
-        static void Main(string[] args)
+                static void Main(string[] args)
         {
             //ArticleUrl();
             //ArticleHtmlString();
@@ -22,8 +24,7 @@ namespace Diffbot.Api.Demo
             //ProductUrl();
 
             //ClassifierResultUrl();
-            TestUrl();
-
+            //TestUrl();
             Console.WriteLine("Press any key to finish.");
             Console.ReadKey();
         }

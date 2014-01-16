@@ -128,5 +128,10 @@ namespace Diffbot.Api.Client
                 throw new HttpRequestException(result.ReasonPhrase);
             }            
         }
+
+        public async Task<JObject> PostJsonAsync(string api, int version, object data)
+        {
+            return null;
+        }
     }
 }
