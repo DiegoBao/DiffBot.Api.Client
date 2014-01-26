@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Diffbot.Api.Client.Articles;
+using Diffbot.Api.Client.FrontPages;
+using Diffbot.Api.Client.Products;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,13 +37,13 @@ namespace Diffbot.Api.Client.Model
                     }
                     break;
                 case PageType.Image:
-                    if (typeof(T).Name == typeof(Images).Name)
+                    if (typeof(T).Name == typeof(ImageResult).Name)
                     {
                         return (T)PageResult;
                     }
                     break;
                 case PageType.Product:
-                    if (typeof(T).Name == typeof(Products).Name)
+                    if (typeof(T).Name == typeof(ProductResult).Name)
                     {
                         return (T)PageResult;
                     }

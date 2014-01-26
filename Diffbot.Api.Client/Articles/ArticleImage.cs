@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Diffbot.Api.Client.Model
+namespace Diffbot.Api.Client.Articles
 {
     public class ArticleImage
     {

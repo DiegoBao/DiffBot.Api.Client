@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Diffbot.Api.Client.Model
+namespace Diffbot.Api.Client.Products
 {
     public class Product
     {

@@ -1,15 +1,19 @@
-﻿using System;
+﻿using Diffbot.Api.Client.Model;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Diffbot.Api.Client.Model
+namespace Diffbot.Api.Client.FrontPages
 {
     public class FrontPage : IPageResult
     {
         public string Title { get; set; }
         public string SourceURL { get; set; }
-        public string SourceType { get; set; }
+        
+        [JsonProperty("sourceType")]
+        public string Type { get; set; }
         public string Icon { get; set; }
         public int NumItems { get; set; }
         public int NumSpamItems { get; set; }

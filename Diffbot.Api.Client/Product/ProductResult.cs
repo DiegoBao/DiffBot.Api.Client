@@ -1,12 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using Diffbot.Api.Client.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Diffbot.Api.Client.Model
+namespace Diffbot.Api.Client.Products
 {
-    public class Products : IPageResult
+    public class ProductResult : IPageResult
     {
         internal static readonly string[] PropertyNames = new string[] { "leafPage", "products", "links", "type", "url", "date_created" };
 

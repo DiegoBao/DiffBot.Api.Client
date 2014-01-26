@@ -1,5 +1,10 @@
 ﻿using Diffbot.Api.Client;
+using Diffbot.Api.Client.Articles;
+using Diffbot.Api.Client.Bulk;
+using Diffbot.Api.Client.CustomApi;
+using Diffbot.Api.Client.FrontPages;
 using Diffbot.Api.Client.Model;
+using Diffbot.Api.Client.Products;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -15,7 +20,7 @@ namespace Diffbot.Api.Demo
     {
         static void Main(string[] args)
         {
-            //ArticleUrl();
+            ArticleUrl();
             //ArticleHtmlString();
             //ArticleHtmlStream();
             //FrontPageUrl();
@@ -27,7 +32,7 @@ namespace Diffbot.Api.Demo
             //TestUrl();
 
             //BulkTest();
-            BulkGetDataTest();
+            //BulkGetDataTest();
 
             Console.WriteLine("Press any key to finish.");
             Console.ReadKey();
@@ -35,7 +40,7 @@ namespace Diffbot.Api.Demo
 
         private async static void BulkGetDataTest()
         {
-            BulkApiClient apiClient = new BulkApiClient("http://api.diffbot.com", "2");
+            BulkApi apiClient = new BulkApi("http://api.diffbot.com", "2");
 
             var job = apiClient.CreateJob(
                 "408da6bbb2f6f23fd44f73ee78de2fa8",
@@ -45,13 +50,13 @@ namespace Diffbot.Api.Demo
 
             await apiClient.UpdateStatus(job);
 
-            var result = await apiClient.GetData(job);
+            //var result = await apiClient.GetData(job);
 
         }
 
         private async static void BulkTest()
         {
-            BulkApiClient apiClient = new BulkApiClient("http://api.diffbot.com", "2");
+            BulkApi apiClient = new BulkApi("http://api.diffbot.com", "2");
             var job = apiClient.CreateJob(
                 "408da6bbb2f6f23fd44f73ee78de2fa8", 
                 "testJob",
@@ -75,7 +80,7 @@ namespace Diffbot.Api.Demo
 
         private async static void TestUrl()
         {
-            ApiClient apiClient = new ApiClient("http://www.diffbot.com", "408da6bbb2f6f23fd44f73ee78de2fa8", "0");
+            CustomApi apiClient = new CustomApi("http://www.diffbot.com", "408da6bbb2f6f23fd44f73ee78de2fa8", "0");
 
             try
             {
@@ -97,7 +102,7 @@ namespace Diffbot.Api.Demo
 
         private async static void ClassifierResultUrl()
         {
-            ApiClient apiClient = new ApiClient();
+            PageClassifierApi apiClient = new PageClassifierApi();
 
             try
             {
@@ -111,7 +116,7 @@ namespace Diffbot.Api.Demo
                     Console.WriteLine("Types: {0}", result.Stats.Types.Count());
                     if (result.Type == PageType.Product)
                     {
-                        Products a = result.GetPageData<Products>();
+                        ProductResult a = result.GetPageData<ProductResult>();
                         Console.WriteLine("Title: {0}", a.Type);
                         Console.WriteLine("Date: {0}", a.DateCreated);
                         Console.WriteLine("Products: {0}", (a.Items != null) ? a.Items.Count() : 0);
@@ -138,7 +143,7 @@ namespace Diffbot.Api.Demo
 
         private async static void ImageUrl()
         {
-            ApiClient apiClient = new ApiClient();
+            ImageApi apiClient = new ImageApi();
 
             try
             {
@@ -149,7 +154,7 @@ namespace Diffbot.Api.Demo
 
                 if (result != null)
                 {
-                    Images a = result;
+                    ImageResult a = result;
                     Console.WriteLine("Title: {0}", a.Title);
                     Console.WriteLine("Date: {0}", a.Date_Created);
                     Console.WriteLine("Images: {0}", (a.Items != null) ? a.Items.Count() : 0);
@@ -163,7 +168,7 @@ namespace Diffbot.Api.Demo
 
         private async static void ProductUrl()
         {
-            ApiClient apiClient = new ApiClient();
+            ProductApi apiClient = new ProductApi();
 
             try
             {
@@ -174,7 +179,7 @@ namespace Diffbot.Api.Demo
 
                 if (result != null)
                 {
-                    Products a = result;
+                    ProductResult a = result;
                     Console.WriteLine("Title: {0}", a.Type);
                     Console.WriteLine("Date: {0}", a.DateCreated);
                     Console.WriteLine("Products: {0}", (a.Items != null) ? a.Items.Count() : 0);
@@ -200,7 +205,7 @@ namespace Diffbot.Api.Demo
 
         private async static void FrontPageUrl()
         {
-            ApiClient apiClient = new ApiClient("http://www.diffbot.com", "408da6bbb2f6f23fd44f73ee78de2fa8", "0");
+            FrontPageApi apiClient = new FrontPageApi("http://www.diffbot.com", "408da6bbb2f6f23fd44f73ee78de2fa8", "0");
 
             try
             {
@@ -227,7 +232,7 @@ namespace Diffbot.Api.Demo
 
         private async static void ArticleHtmlStream()
         {
-            ApiClient apiClient = new ApiClient();
+            ArticleApi apiClient = new ArticleApi();
 
             try
             {
@@ -253,7 +258,7 @@ namespace Diffbot.Api.Demo
 
         private async static void ArticleHtmlString()
         {
-            ApiClient apiClient = new ApiClient();
+            ArticleApi apiClient = new ArticleApi();
 
             try
             {
@@ -280,7 +285,7 @@ namespace Diffbot.Api.Demo
 
         static async void ArticleUrl()
         {
-            ApiClient apiClient = new ApiClient();
+            ArticleApi apiClient = new ArticleApi();
 
             try
             {

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Diffbot.Api.Client
+namespace Diffbot.Api.Client.Bulk
 {
-    public class BulkApiClient
+    public class BulkApi
     {
         private DiffbotCall diffbotCall;
         private int version;
@@ -19,7 +19,7 @@ namespace Diffbot.Api.Client
         /// <summary>
         /// Creates an instance of the ApiClient taken the needed parameters from the configuration file.
         /// </summary>
-        public BulkApiClient()
+        public BulkApi()
             : this(
                 ConfigurationManager.AppSettings["DiffbotUrl"],
                 ConfigurationManager.AppSettings["DiffbotVersion"])
@@ -32,7 +32,7 @@ namespace Diffbot.Api.Client
         /// <param name="baseApiUrl">URL of the Diffbot Api. (ex. http://api.diffbot.com )</param>
         /// <param name="token">Diffbot API Token required for using the API.</param>
         /// <param name="version">Vesion of the API</param>
-        public BulkApiClient(string baseApiUrl, string version)
+        public BulkApi(string baseApiUrl, string version)
         {
             if (string.IsNullOrWhiteSpace(baseApiUrl))
             {

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Diffbot.Api.Client.Model
 {
-    public class Images : IPageResult
+    public class ImageResult : IPageResult
     {
         internal static readonly string[] PropertyNames = new string[] 
                 { "title", "images", "links", "type", "resolved_url", "url", "date_created" };

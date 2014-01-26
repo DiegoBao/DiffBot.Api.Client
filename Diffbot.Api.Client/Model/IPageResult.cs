@@ -7,5 +7,6 @@ namespace Diffbot.Api.Client.Model
 {
     public interface IPageResult
     {
+        string Type { get; set; }
     }
 }
