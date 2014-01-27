@@ -119,7 +119,7 @@ namespace Diffbot.Api.Client
                     break;
             }
             
-            return classifierResult;
+            return classifierResult; 
         }
         #endregion
     }

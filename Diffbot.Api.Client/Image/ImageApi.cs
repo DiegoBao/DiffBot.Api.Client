@@ -14,7 +14,7 @@ namespace Diffbot.Api.Client
 {
     public class ImageApi
     {
-        private DiffbotCall diffbotCall;
+        private DiffbotCall diffbotCall; 
         private string token;
         private int version;
 

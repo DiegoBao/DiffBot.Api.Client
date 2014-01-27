@@ -13,7 +13,7 @@ namespace Diffbot.Api.Client.FrontPages
 {
     public class FrontPageApi
     {
-        private DiffbotCall diffbotCall;
+        private DiffbotCall diffbotCall; 
         private string token;
         private int version;
 

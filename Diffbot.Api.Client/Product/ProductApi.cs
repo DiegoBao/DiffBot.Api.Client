@@ -98,7 +98,7 @@ namespace Diffbot.Api.Client.Products
             products.Properties = properties.ToDictionary(k => k.Key, k => (object)k.Value);
             foreach (var propName in products.Properties.Where(k => ProductResult.PropertyNames.Contains(k.Key)).ToArray())
             {
-                products.Properties.Remove(propName.Key);
+                products.Properties.Remove(propName.Key); 
             }
             return products;
         }
