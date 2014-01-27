@@ -18,9 +18,7 @@ namespace Diffbot.Api.Client
         private string token;
         private int version;
 
-        /// <summary>
-        /// Creates an instance of the ApiClient taken the needed parameters from the configuration file.
-        /// </summary>
+
         public ImageApi()
             : this(
                 ConfigurationManager.AppSettings["DiffbotUrl"],
